@@ -94,7 +94,8 @@ const playerCharacterSprite = {
                 this.currentDirection = 3;
                 this.hasMoved = true;
                 break;
-            default: this.currentDirection = 0;
+            default:
+                this.currentDirection = 0;
                 this.currentLoopIndex = 0
                 this.hasMoved = false;
                 break;

@@ -51,7 +51,7 @@ const myGameAreaObstacle = {
     moveObstacles: function () {
         myGameAreaObstacle.obstacles.forEach(obstacle => {
             obstacle.x -= 20;
-            if (obstacle.y < 0) {
+            if (obstacle.x < 0) {
                 myGameAreaObstacle.obstacles.shift();
             }
         });
