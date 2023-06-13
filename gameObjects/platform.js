@@ -5,6 +5,7 @@ function startGame() {
 
 function updateGameArea() {
     myGameAreaPLATFORM.clear();
+    platforms.update();
     playerCharacterPLATFORM.update();
 }
 
@@ -24,29 +25,42 @@ const myGameAreaPLATFORM = {
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
     },
 
-    draw: function (coordinateX, coordinateY, color) {
+    draw: function (coordinateX, coordinateY, color, width, height) {
         this.context.fillStyle = color;
-        this.context.fillRect(coordinateX, coordinateY, 20, 20);
+        this.context.fillRect(coordinateX, coordinateY, width, height);
     }
 }
 
+const platforms = {
+    storage: [{ x: 100, y: 240, width: 50, height: 20, color: "black" }],
+    update: function () {
+        this.storage.forEach(platform => {
+            myGameAreaPLATFORM.draw(platform.x, platform.y, platform.color, platform.width, platform.height)
+        })
+    }
+}
+
+
+
 const playerCharacterPLATFORM = {
-    color: "blue",
+    color: "purple",
     head: { x: 100, y: 280 },
     key: null,
     xSpeed: 0,
     ySpeed: 0,
-    PLATFORMing: false,
+    width: 20,
+    height: 20,
+    jumping: false,
     start: function () {
         window.addEventListener('keydown', function (e) {
             playerCharacterPLATFORM.key = e.key;
         })
-        myGameAreaPLATFORM.draw(this.head.x, this.head.y, this.color);
+        myGameAreaPLATFORM.draw(this.head.x, this.head.y, this.color, this.width, this.height);
     },
     update: function () {
         this.updateSpeed();
         this.updatePosition();
-        myGameAreaPLATFORM.draw(this.head.x, this.head.y, this.color);
+        myGameAreaPLATFORM.draw(this.head.x, this.head.y, this.color, this.width, this.height);
     },
     updatePosition: function () {
         this.head.x += this.xSpeed;
@@ -57,14 +71,14 @@ const playerCharacterPLATFORM = {
         } else {
             this.ySpeed = 0;
             this.head.y = myGameAreaPLATFORM.canvas.height - 20;
-            this.PLATFORMing = false;
+            this.jumping = false;
         }
 
     },
     updateSpeed: function () {
-        if (this.key === "w" && this.PLATFORMing === false) {
+        if (this.key === "w" && this.jumping === false) {
             this.ySpeed = -50;
-            this.PLATFORMing = true;
+            this.jumping = true;
         }
 
         if (this.key === "a") {
@@ -74,6 +88,17 @@ const playerCharacterPLATFORM = {
         }
 
         this.key = "";
+    },
+
+    checkPlatformCollission: function () {
+        //case stands on platform - check if falls from platform
+        if (!this.jumping && this.head.y != myGameAreaPLATFORM.canvas.height - this.height) { }
+        //case is falling - check if lands on platform
+        if (this.jumping && this.ySpeed >= 0) { }
+        //case is jumping - check if collides with platform from below
+        if (this.jumping && this.ySpeed <= 0) {
+        }
+        //check collission left/right
     },
 }
 
